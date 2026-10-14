@@ -1,0 +1,544 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>The Pant Project Growth Report</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Manrope:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: tape-measure band, a thesis hero, then five interactive sections (growth what-if, reputation filter, price slider, store math, moves explorer). Built to be shared as a link in a LinkedIn post. */
+:root{
+  --bg:#EEF1F0; --surface:#FAFBFA; --surface-2:#E1E8E6; --ink:#14201E; --ink-2:#4B5C59; --line:#CBD5D2;
+  --denim:#2A3D6E; --denim-soft:#CCD5EA;
+  --tape:#F0C419; --on-tape:#1A1A12;
+  --good:#17694A; --good-bg:#D5ECE1; --warn:#7F5100; --warn-bg:#F5E5C0; --risk:#A3301F; --risk-bg:#F4D8D3;
+  --f-display:'Archivo',system-ui,'Segoe UI',Arial,sans-serif;
+  --f-body:'Manrope',system-ui,-apple-system,'Segoe UI',sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1514; --surface:#151F1E; --surface-2:#1E2B2A; --ink:#E7EEEC; --ink-2:#A0B1AD; --line:#2B3A38;
+    --denim:#93A9E0; --denim-soft:#26324F;
+    --good:#62CF9D; --good-bg:#14392B; --warn:#E8B44E; --warn-bg:#3A2D10; --risk:#F28F80; --risk-bg:#402019;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1514; --surface:#151F1E; --surface-2:#1E2B2A; --ink:#E7EEEC; --ink-2:#A0B1AD; --line:#2B3A38;
+  --denim:#93A9E0; --denim-soft:#26324F;
+  --good:#62CF9D; --good-bg:#14392B; --warn:#E8B44E; --warn-bg:#3A2D10; --risk:#F28F80; --risk-bg:#402019;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.5;margin:0}
+.wrap{max-width:1080px;margin-inline:auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3,p{margin:0}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance}
+h1{font-weight:800;letter-spacing:-.025em}
+h2{font-weight:700;letter-spacing:-.02em}
+h3{font-weight:700;font-size:1.05rem;line-height:1.25}
+:focus-visible{outline:2px solid var(--denim);outline-offset:2px}
+.lab{font:600 12px/1.2 var(--f-display);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2)}
+[hidden]{display:none!important}
+
+.tape{background:var(--tape);color:var(--on-tape)}
+.tape-in{display:flex;justify-content:space-between;gap:6px 24px;flex-wrap:wrap;padding-block:12px 10px;font:600 12px/1.3 var(--f-display);letter-spacing:.1em;text-transform:uppercase}
+.ticks{height:16px;background:
+  repeating-linear-gradient(90deg,var(--on-tape) 0 1.5px,transparent 1.5px 50px) left bottom/100% 16px no-repeat,
+  repeating-linear-gradient(90deg,var(--on-tape) 0 1px,transparent 1px 10px) left bottom/100% 7px no-repeat}
+
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+.nav-in{display:flex;gap:4px;align-items:center;padding-block:8px}
+.nav-links{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;flex:1;min-width:0}
+.nav a{flex:none;font:600 12px/1 var(--f-display);letter-spacing:.07em;text-transform:uppercase;text-decoration:none;color:var(--ink-2);padding:9px 12px;border-radius:4px}
+.nav a:hover{background:var(--surface-2);color:var(--ink)}
+.themebtn{flex:none;font:600 12px/1 var(--f-display);letter-spacing:.07em;text-transform:uppercase;padding:9px 12px;border-radius:4px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+
+.hero{padding-block:clamp(32px,6vw,60px) 28px}
+.hero h1{font-size:clamp(2.3rem,5.8vw,4.3rem);line-height:1;max-width:16ch}
+.hero h1 span{color:var(--denim)}
+.sub{margin-top:16px;color:var(--ink-2);max-width:58ch}
+.by{margin-top:14px;font:600 .85rem/1.3 var(--f-display);color:var(--ink-2)}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:28px}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:16px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.kpi b{font:800 clamp(1.6rem,3vw,2.3rem)/1 var(--f-display);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.kpi span{font-size:.85rem;color:var(--ink-2);line-height:1.35}
+.verdicts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:12px}
+.verdict{border-top:4px solid var(--ink);padding-top:12px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.v-good{border-color:var(--good)} .v-risk{border-color:var(--risk)} .v-key{border-color:var(--tape)}
+.verdict p{font-size:.95rem}
+.chipx{display:inline-flex;align-items:center;gap:6px;font:700 12px/1 var(--f-display);padding:6px 9px;border-radius:3px;white-space:nowrap;align-self:flex-start}
+.chipx::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.c-good{background:var(--good-bg);color:var(--good)} .c-warn{background:var(--warn-bg);color:var(--warn)} .c-risk{background:var(--risk-bg);color:var(--risk)}
+
+section{padding-block:clamp(36px,5.5vw,64px);border-top:1px solid var(--line);scroll-margin-top:52px}
+section h2{font-size:clamp(1.6rem,3.3vw,2.4rem);line-height:1.1;max-width:24ch;margin-top:10px}
+.block{margin-top:28px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:clamp(16px,3vw,26px);min-width:0}
+.panel+.panel{margin-top:12px}
+.cap{font-size:.86rem;color:var(--ink-2);margin-top:12px}
+.cols{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:clamp(16px,3vw,32px)}
+.ph{display:flex;justify-content:space-between;align-items:baseline;gap:6px 16px;flex-wrap:wrap;margin-bottom:14px}
+
+/* controls */
+.field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.field label{display:flex;justify-content:space-between;gap:8px;font-size:.9rem;font-weight:600}
+.field label output{font:700 14px/1.2 var(--f-display);color:var(--denim);font-variant-numeric:tabular-nums}
+.field input[type=range]{width:100%;accent-color:var(--denim);margin:0}
+.field input[type=number]{font:700 1rem/1 var(--f-display);padding:10px 12px;border:1.5px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink);width:100%}
+.field small{color:var(--ink-2);font-size:.8rem}
+.out{background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:12px 14px;min-width:0}
+.out .k{font-size:.8rem;color:var(--ink-2);line-height:1.3}
+.out .v{font:800 1.55rem/1.15 var(--f-display);margin-top:4px;font-variant-numeric:tabular-nums;overflow-wrap:anywhere;letter-spacing:-.01em}
+.out.hl{background:var(--tape);border-color:var(--tape);color:var(--on-tape)}
+.out.hl .k{color:var(--on-tape);opacity:.8}
+.outs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;align-content:start}
+.span2{grid-column:1/-1}
+.trio{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:8px}
+.tabs{display:flex;gap:6px;flex-wrap:wrap}
+.tab{font:700 .88rem/1 var(--f-display);padding:11px 14px;border-radius:6px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer;text-align:left}
+.tab:hover{border-color:var(--ink-2)}
+.tab[aria-selected="true"],.tab[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+
+/* revenue chart */
+.scroll{overflow-x:auto;max-width:100%}
+.chart{min-width:560px;width:100%;height:auto;display:block}
+.chart text{font-family:var(--f-display);fill:var(--ink-2);font-size:13px;font-weight:500}
+.chart .val{fill:var(--ink);font-size:15px;font-weight:700}
+.chart .grid-l{stroke:var(--line);stroke-width:1}
+.chart .base{stroke:var(--ink);stroke-width:1.5}
+.chart .b-act{fill:var(--denim)}
+.chart .b-imp{fill:url(#hatch);stroke:var(--denim);stroke-width:1.5;stroke-dasharray:4 3}
+.chart .b-tgt{fill:var(--tape)}
+.chart .hatch-l{stroke:var(--denim);stroke-width:1.5}
+.chart .gap-l{stroke:var(--line);stroke-width:1.5;stroke-dasharray:3 4}
+.legend{display:flex;gap:6px 18px;flex-wrap:wrap;margin-top:10px;font-size:.82rem;color:var(--ink-2)}
+.legend i{display:inline-block;width:12px;height:12px;margin-right:6px;vertical-align:-1px;border-radius:2px}
+.stack{position:relative;height:42px;background:var(--surface-2);border-radius:4px;overflow:hidden;margin-top:6px}
+.stack i{position:absolute;top:0;bottom:0;left:0;transition:width .35s ease,left .35s ease}
+.stack .s1{background:var(--denim)} .stack .s2{background:var(--tape)}
+.mark{position:absolute;top:0;bottom:0;width:3px;background:var(--ink);z-index:1}
+.mlab{position:relative;height:20px;margin-top:6px;font:600 11px/1 var(--f-display);color:var(--ink-2)}
+.mlab span{position:absolute;top:0;white-space:nowrap}
+
+/* reputation */
+.rows{display:grid;gap:10px;margin-top:14px}
+.rrow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;align-items:center;padding:12px 14px;border:1px solid var(--line);border-radius:6px;background:var(--bg);text-align:left;color:var(--ink);cursor:pointer;width:100%;font:inherit}
+.rrow:hover{border-color:var(--ink-2)}
+.rrow[aria-expanded="true"]{border-color:var(--ink);background:var(--surface)}
+.rrow b{font:700 .95rem/1.2 var(--f-display)}
+.rrow .s{grid-column:1/-1;font-size:.88rem;color:var(--ink-2)}
+.score .big{font:800 3.4rem/1 var(--f-display);letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.score .big small{font-size:1.2rem;color:var(--ink-2);font-weight:600}
+.starbar{height:12px;background:var(--surface-2);border-radius:6px;overflow:hidden;margin-top:12px}
+.starbar i{display:block;height:100%;background:var(--tape)}
+.chbox{border:1px solid var(--line);border-radius:6px;background:var(--bg);padding:16px;margin-top:14px;display:grid;gap:8px}
+.chbox .p{font:800 1.6rem/1 var(--f-display);font-variant-numeric:tabular-nums}
+.chbox dl{margin:0;display:grid;grid-template-columns:auto minmax(0,1fr);gap:6px 14px;font-size:.9rem}
+.chbox dt{color:var(--ink-2)} .chbox dd{margin:0;font-weight:600}
+.chbox .note{font-size:.84rem;color:var(--ink-2);padding-top:8px;border-top:1px dashed var(--line)}
+
+/* price */
+.ptrack{position:relative;height:38px;background:var(--surface-2);border-radius:3px;margin-top:10px}
+.pbar{position:absolute;top:0;bottom:0;background:var(--ink);border-radius:3px;display:flex;align-items:center;justify-content:center;font:700 12px/1 var(--f-display);color:var(--bg);white-space:nowrap;overflow:hidden}
+.pbar.sell{background:var(--tape);color:var(--on-tape)}
+.pdot{position:absolute;top:-5px;bottom:-5px;width:4px;background:var(--denim);border:1px solid var(--bg);transition:left .15s;z-index:1}
+.pticks{position:relative;height:16px;margin-top:6px;font:500 11px/1 var(--f-display);color:var(--ink-2)}
+.pticks span{position:absolute;transform:translateX(-50%)} .pticks span:first-child{transform:none} .pticks span:last-child{transform:translateX(-100%)}
+.facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:12px}
+.fact{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:16px;min-width:0}
+.fact b{font:800 1.7rem/1 var(--f-display);letter-spacing:-.02em;font-variant-numeric:tabular-nums;display:block}
+.fact span{font-size:.86rem;color:var(--ink-2);display:block;margin-top:6px}
+
+/* stores */
+.map{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+.map i{width:14px;height:14px;border-radius:3px;background:var(--surface-2);border:1px solid var(--line)}
+.map i.on{background:var(--denim);border-color:var(--denim)}
+.map i.mid{background:var(--denim-soft);border-color:var(--denim)}
+.keyrow{display:flex;gap:6px 18px;flex-wrap:wrap;margin-top:12px;font-size:.84rem;color:var(--ink-2)}
+.keyrow i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px;border:1px solid var(--line)}
+.k-on{background:var(--denim);border-color:var(--denim)!important} .k-mid{background:var(--denim-soft);border-color:var(--denim)!important} .k-off{background:var(--surface-2)}
+.gauge{position:relative;height:26px;background:var(--surface-2);border-radius:3px;overflow:hidden;margin-top:10px}
+.gauge i{position:absolute;inset:0 auto 0 0;background:var(--denim);transition:width .2s}
+.gline{position:absolute;top:0;bottom:0;width:3px;background:var(--tape);z-index:1}
+.verdictbox{margin-top:12px;display:inline-flex;font:700 .95rem/1.2 var(--f-display);padding:10px 14px;border-radius:6px}
+.vb-go{background:var(--good-bg);color:var(--good)} .vb-test{background:var(--warn-bg);color:var(--warn)} .vb-hold{background:var(--risk-bg);color:var(--risk)}
+
+/* moves */
+.mv{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.5fr);gap:12px}
+.mvlist{display:grid;gap:8px;align-content:start}
+.mvb{display:flex;gap:12px;align-items:center;text-align:left;padding:14px;border:1.5px solid var(--line);border-radius:6px;background:var(--surface);color:var(--ink);cursor:pointer;font:700 .95rem/1.25 var(--f-display);width:100%}
+.mvb:hover{border-color:var(--ink-2)}
+.mvb[aria-selected="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.mvb .n{flex:none;width:28px;height:28px;border-radius:50%;background:var(--tape);color:var(--on-tape);display:grid;place-items:center;font:800 .85rem/1 var(--f-display)}
+.mvd h3{font:800 clamp(1.4rem,2.6vw,2rem)/1.1 var(--f-display);letter-spacing:-.02em;margin-bottom:16px}
+.mvd .bx{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.mvd .bx>div{background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:14px;font-size:.92rem}
+.mvd .bx b{display:block;font:700 11px/1 var(--f-display);letter-spacing:.09em;text-transform:uppercase;color:var(--ink-2);margin-bottom:6px}
+.mvd .bx>div.t{background:var(--denim-soft)}
+
+details{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:14px 18px}
+summary{font:700 .95rem/1.3 var(--f-display);cursor:pointer}
+.table-box{overflow-x:auto;max-width:100%;margin-top:12px}
+table{border-collapse:collapse;width:100%;min-width:620px;font-size:.88rem}
+th,td{text-align:left;vertical-align:top;padding:9px 12px;border-bottom:1px solid var(--line)}
+th{font:700 11px/1.3 var(--f-display);letter-spacing:.09em;text-transform:uppercase;color:var(--ink-2)}
+td:first-child{font-weight:700;font-family:var(--f-display)}
+tbody tr:last-child td{border-bottom:0}
+
+footer{border-top:1px solid var(--line);padding-block:28px 52px;color:var(--ink-2);font-size:.85rem}
+footer p{max-width:84ch}
+
+@media (max-width:900px){
+  .kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .verdicts,.facts{grid-template-columns:minmax(0,1fr)}
+  .cols,.mv{grid-template-columns:minmax(0,1fr)}
+  .mvd .bx{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:640px){
+  .outs,.trio{grid-template-columns:minmax(0,1fr)}
+}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.stack i,.gauge i,.pdot{transition:none}}
+</style>
+
+<div class="tape">
+  <div class="wrap"><div class="tape-in"><span>The Pant Project</span><span>Brand growth report &middot; Oct 2026</span></div></div>
+  <div class="ticks" aria-hidden="true"></div>
+</div>
+
+<nav class="nav" aria-label="Sections"><div class="wrap"><div class="nav-in">
+  <div class="nav-links"><a href="#growth">Growth</a><a href="#trust">Trust</a><a href="#price">Price</a><a href="#stores">Stores</a><a href="#moves">Moves</a></div>
+  <button class="themebtn" id="theme" type="button">Dark</button>
+</div></div></nav>
+
+<header class="hero"><div class="wrap">
+  <h1>Fit earned the trust. Speed earned the growth. <span>Consistency</span> decides FY27.</h1>
+  <p class="sub">A brand manager's read of how The Pant Project grew, what could hold it back, and what to test next. Move the sliders and tap the cards to try your own numbers.</p>
+  <p class="by">Analysis by Mishita Maggo &middot; built from public information</p>
+  <div class="kpis">
+    <div class="kpi"><b>₹40.7 Cr</b><span>FY25 revenue, up 32%</span></div>
+    <div class="kpi"><b>+98% a year</b><span>Growth needed for ₹160 Cr by FY27 (my arithmetic)</span></div>
+    <div class="kpi"><b>8 → 120+</b><span>Stores named today vs. plan</span></div>
+    <div class="kpi"><b>4.7 / 5</b><span>Own-site rating, 24,000+ reviews</span></div>
+  </div>
+  <div class="verdicts">
+    <div class="verdict v-good"><span class="chipx c-good">Working</span><p>Ready-made sizes cut from custom-order measurements. Delivery fell from two weeks to 48 hours.</p></div>
+    <div class="verdict v-risk"><span class="chipx c-risk">At risk</span><p>The fit promise sits on custom orders. Ready-made carries the volume and the stitching complaints.</p></div>
+    <div class="verdict v-key"><span class="chipx c-warn">Decides FY27</span><p>Stores: 8 named today, 120 to 150 planned.</p></div>
+  </div>
+</div></header>
+
+<section id="growth"><div class="wrap">
+  <span class="lab">Growth</span>
+  <h2>The first leap came from a fix. The second needs stores.</h2>
+  <div class="panel block">
+    <div class="ph"><h3>Revenue, ₹ crore</h3><span class="lab">FY22–23 not public</span></div>
+    <div class="scroll"><svg id="revChart" class="chart" viewBox="0 0 720 320" role="img" aria-label="Bar chart of revenue: FY21 1.0 crore, FY24 30.8, FY25 40.7, FY26 about 81 on a steady path, FY27 target 160."></svg></div>
+    <div class="legend"><span><i style="background:var(--denim)"></i>Reported</span><span><i style="background:var(--denim-soft);border:1.5px dashed var(--denim)"></i>Steady-path midpoint (my arithmetic)</span><span><i style="background:var(--tape)"></i>Company target</span></div>
+  </div>
+
+  <div class="panel">
+    <div class="ph"><h3>Try it: what does ₹160 Cr in FY27 take?</h3><span class="lab">A what-if, not a forecast</span></div>
+    <div class="cols">
+      <div>
+        <div class="field"><label for="base">FY26 revenue, ₹ Cr</label><input id="base" type="number" min="20" max="200" step="0.1" value="80.7"><small>Placeholder on the steady path. Type the real number if you have it.</small></div>
+        <div class="field"><label for="gr">Growth of the existing business <output id="grO">32%</output></label><input id="gr" type="range" min="0" max="80" step="1" value="32"><small>FY25 grew 32%</small></div>
+        <div class="field"><label for="ns">New stores opened in FY27 <output id="nsO">40</output></label><input id="ns" type="range" min="0" max="80" step="1" value="40"></div>
+        <div class="field"><label for="opd">Orders a day per new store <output id="opdO">8.0</output></label><input id="opd" type="range" min="3" max="14" step="0.5" value="8"></div>
+        <div class="field"><label for="aov">Average store order, ₹ <output id="aovO">6,000</output></label><input id="aov" type="range" min="4000" max="8000" step="100" value="6000"></div>
+      </div>
+      <div>
+        <div class="out hl"><div class="k">FY27 revenue in this scenario</div><div class="v" id="wTotal">—</div></div>
+        <div class="stack" role="img" aria-label="Existing business and new store revenue against the 160 crore target"><i class="s1" id="bEx" style="width:0"></i><i class="s2" id="bSt" style="width:0"></i><span class="mark" style="left:80%"></span></div>
+        <div class="mlab"><span style="left:0">0</span><span style="left:80%;transform:translateX(-50%)">₹160 Cr target</span><span style="right:0">200</span></div>
+        <div class="legend"><span><i style="background:var(--denim)"></i>Existing business</span><span><i style="background:var(--tape)"></i>New stores</span></div>
+        <div class="outs" style="margin-top:14px">
+          <div class="out"><div class="k" id="wGapK">Gap to target</div><div class="v" id="wGap">—</div></div>
+          <div class="out"><div class="k">New stores needed at this growth</div><div class="v" id="wNeed">—</div></div>
+        </div>
+      </div>
+    </div>
+    <p class="cap">New stores are assumed to open evenly through the year and run at full pace from day one, which is generous.</p>
+  </div>
+</div></section>
+
+<section id="trust"><div class="wrap">
+  <span class="lab">Trust</span>
+  <h2>Loved on its own site. Doubted everywhere else.</h2>
+  <div class="cols block">
+    <div class="panel">
+      <div class="score"><span class="lab">Own site</span>
+        <div class="big" style="margin-top:8px">4.7<small> / 5</small></div>
+        <div class="starbar" role="img" aria-label="94 percent of reviews are four or five stars"><i style="width:94%"></i></div>
+        <p class="cap">24,000+ reviews. About 94% give four or five stars.</p></div>
+      <div class="ph" style="margin:22px 0 0"><span class="lab">Pick a way to buy</span></div>
+      <div class="tabs" style="margin-top:10px" role="group" aria-label="Way to buy">
+        <button class="tab" type="button" data-ch="rtw" aria-pressed="true">Ready-made</button>
+        <button class="tab" type="button" data-ch="mtm" aria-pressed="false">Made-to-measure</button>
+        <button class="tab" type="button" data-ch="mkt" aria-pressed="false">Marketplace</button>
+      </div>
+      <div class="chbox" id="chbox"></div>
+    </div>
+    <div class="panel">
+      <div class="ph" style="margin-bottom:10px"><h3>What customers say</h3><span class="lab">Filter and tap</span></div>
+      <div class="tabs" role="group" aria-label="Filter">
+        <button class="tab" type="button" data-f="all" aria-pressed="true">All</button>
+        <button class="tab" type="button" data-f="good" aria-pressed="false">Holds</button>
+        <button class="tab" type="button" data-f="risk" aria-pressed="false">At risk</button>
+      </div>
+      <div class="rows" id="rows"></div>
+      <p class="cap">The brand promises fabric, and that holds. Customers judge stitching, which nothing public shows it testing.</p>
+    </div>
+  </div>
+</div></section>
+
+<section id="price"><div class="wrap">
+  <span class="lab">Price</span>
+  <h2>The tag says premium. Checkout says sale.</h2>
+  <div class="panel block">
+    <div class="cols">
+      <div>
+        <div class="field" style="margin-bottom:6px"><label for="pp">Try a price paid, ₹ <output id="ppO">2,140</output></label><input id="pp" type="range" min="1500" max="3500" step="10" value="2140"></div>
+        <div class="out hl" style="margin-top:14px"><div class="k">Under the midpoint tag price of ₹3,990</div><div class="v" id="ppD">—</div></div>
+        <p class="cap">Real ready-made range: tags ₹2,990 to ₹4,990, prices paid ₹1,690 to ₹2,590. Midpoints give about 46% off.</p>
+      </div>
+      <div>
+        <span class="lab">Tag price</span>
+        <div class="ptrack" role="img" aria-label="Tag price range 2,990 to 4,990 on a 0 to 5,000 rupee scale"><div class="pbar" style="left:59.8%;width:40%">2,990 – 4,990</div></div>
+        <span class="lab" style="display:block;margin-top:16px">Price paid, real range and your pick</span>
+        <div class="ptrack" role="img" aria-label="Price paid range 1,690 to 2,590 and your chosen price"><div class="pbar sell" style="left:33.8%;width:18%">1,690 – 2,590</div><div class="pdot" id="pdot" style="left:42.8%"></div></div>
+        <div class="pticks"><span style="left:0">0</span><span style="left:20%">1,000</span><span style="left:40%">2,000</span><span style="left:60%">3,000</span><span style="left:80%">4,000</span><span style="left:100%">5,000</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="facts">
+    <div class="fact"><b>15% vs 5%</b><span>First-order discount shown on the newsletter vs. the blog</span></div>
+    <div class="fact"><b>₹6,000</b><span>Average store order, against ₹3,000–4,000 online</span></div>
+    <div class="fact"><b>One rule</b><span>Test a single price and a single code for eight weeks</span></div>
+  </div>
+</div></section>
+
+<section id="stores"><div class="wrap">
+  <span class="lab">Stores</span>
+  <h2>Eight orders a day per store. Three or four openings a month.</h2>
+  <div class="panel block">
+    <div class="ph"><h3>One mature store</h3><span class="lab">Move the sliders</span></div>
+    <div class="cols">
+      <div>
+        <div class="field"><label for="sopd">Orders per day <output id="sopdO">8.2</output></label><input id="sopd" type="range" min="3" max="14" step="0.1" value="8.2"></div>
+        <div class="field"><label for="saov">Average order, ₹ <output id="saovO">6,000</output></label><input id="saov" type="range" min="3000" max="8000" step="100" value="6000"></div>
+        <div class="field"><label for="sgm">Gross margin, % <output id="sgmO">57.5</output></label><input id="sgm" type="range" min="40" max="65" step="0.5" value="57.5"></div>
+        <div class="field"><label for="scap">Cost to open, ₹ lakh <output id="scapO">35</output></label><input id="scap" type="range" min="25" max="45" step="1" value="35"></div>
+      </div>
+      <div class="outs">
+        <div class="out"><div class="k">Revenue a year</div><div class="v" id="oRev">—</div></div>
+        <div class="out"><div class="k">Gross profit a year</div><div class="v" id="oGp">—</div></div>
+        <div class="out hl span2"><div class="k">Most it can spend a month on rent, staff and running costs and still earn back its opening cost in</div>
+          <div class="trio"><div><div class="k">12 months</div><div class="v" id="oC12">—</div></div><div><div class="k">18 months</div><div class="v" id="oC18">—</div></div><div><div class="k">24 months</div><div class="v" id="oC24">—</div></div></div></div>
+      </div>
+    </div>
+    <p class="cap">Defaults match the company's own figures: ₹1.8 Cr a year, 55–60% margin, ₹30–40 lakh to open. Store running costs are not public.</p>
+  </div>
+
+  <div class="panel">
+    <div class="ph"><h3>Rollout map</h3><span class="lab">Each square is a store</span></div>
+    <div class="cols">
+      <div>
+        <div class="field"><label for="tgt">Target stores <output id="tgtO">120</output></label><input id="tgt" type="range" min="40" max="300" step="10" value="120"></div>
+        <div class="field"><label for="mon">Months to get there <output id="monO">36</output></label><input id="mon" type="range" min="12" max="72" step="6" value="36"></div>
+        <div class="field"><label for="cur">Open today <output id="curO">8</output></label><input id="cur" type="range" min="4" max="40" step="1" value="8"></div>
+        <div class="outs">
+          <div class="out hl"><div class="k">Openings a month needed</div><div class="v" id="oPace">—</div></div>
+          <div class="out"><div class="k">Years at one a month</div><div class="v" id="oYears">—</div></div>
+          <div class="out"><div class="k">Cost of the openings</div><div class="v" id="oCap">—</div></div>
+          <div class="out"><div class="k">Daily orders vs. whole brand in FY25</div><div class="v" id="oX">—</div></div>
+        </div>
+      </div>
+      <div>
+        <div class="map" id="map" role="img" aria-label="Grid of stores: open today, added at the chosen pace, and still to find"></div>
+        <div class="keyrow"><span><i class="k-on"></i>Open today</span><span><i class="k-mid"></i>Added in the months chosen, at one a month</span><span><i class="k-off"></i>Still to find</span></div>
+      </div>
+    </div>
+    <p class="cap">Open today counts 4 own stores and 4 shop-in-shops named in public coverage. The real count may be higher. FY25 orders are about 320 a day at ₹3,500 each, my arithmetic.</p>
+  </div>
+
+  <div class="panel">
+    <div class="ph"><h3>Go or no-go for a new city</h3><span class="lab">Test in a shop-in-shop first</span></div>
+    <div class="cols">
+      <div><div class="field" style="margin-bottom:0"><label for="so">Orders a day in the test store <output id="soO">6.0</output></label><input id="so" type="range" min="2" max="14" step="0.5" value="6"></div>
+        <div class="verdictbox vb-test" id="vbox"></div></div>
+      <div><div class="gauge" role="img" aria-label="Orders a day against the line of 8"><i id="gfill" style="width:42.9%"></i><span class="gline" style="left:57.1%"></span></div>
+        <div class="pticks"><span style="left:0">0</span><span style="left:57.1%">8 a day</span><span style="left:100%">14</span></div>
+        <p class="cap">The line comes from the company's own ₹1.8 Cr a year per mature store, at ₹6,000 an order.</p></div>
+    </div>
+  </div>
+</div></section>
+
+<section id="moves"><div class="wrap">
+  <span class="lab">Moves</span>
+  <h2>Five moves, each with a test.</h2>
+  <div class="mv block">
+    <div class="mvlist" role="tablist" aria-label="Moves" id="mvl"></div>
+    <div class="panel mvd" id="mvd" role="tabpanel"></div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <details>
+    <summary>Where public sources disagree, and what I used</summary>
+    <div class="table-box"><table>
+      <thead><tr><th>Item</th><th>Source A</th><th>Source B</th><th>Used</th></tr></thead>
+      <tbody>
+        <tr><td>Own-site reviews</td><td>24,000+, 94% positive</td><td>12,241, 81% positive</td><td>The newer one</td></tr>
+        <tr><td>Series A</td><td>$4.25M, June 2024</td><td>2023, also "bootstrapped"</td><td>June 2024</td></tr>
+        <tr><td>Customers measured</td><td>500,000+</td><td>30,000+ by 2022</td><td>Not used. FY25 is about 116,000 orders.</td></tr>
+        <tr><td>"40x growth"</td><td>Placed under FY27</td><td>—</td><td>It fits FY21 to FY25. FY27 would be 160x.</td></tr>
+      </tbody>
+    </table></div>
+  </details>
+</div></section>
+
+<footer><div class="wrap">
+  <p>An independent analysis using public information: press coverage, pantproject.com and public forums. I haven't seen the company's internal data, so every number to watch is a question, not a verdict. Calculator results are my arithmetic on the inputs shown. Not affiliated with The Pant Project.</p>
+</div></footer>
+
+<script>
+(function(){
+  var $=function(id){return document.getElementById(id)};
+  var qa=function(s){return Array.prototype.slice.call(document.querySelectorAll(s))};
+  var fmt=function(n,d){d=d==null?1:d;return n.toLocaleString('en-IN',{minimumFractionDigits:d,maximumFractionDigits:d})};
+
+  /* revenue chart */
+  var W=720,baseY=264,topY=24,k=(baseY-topY)/180,x0=50,slot=110,bw=56;
+  var bars=[{x:0,l:'FY21',v:1.0,t:'act',s:'₹1.0'},{x:1,t:'gap'},{x:2,l:'FY24',v:30.8,t:'act',s:'₹30.8'},{x:3,l:'FY25',v:40.7,t:'act',s:'₹40.7'},{x:4,l:'FY26',v:Math.sqrt(40.7*160),t:'imp',s:'≈₹81'},{x:5,l:'FY27',v:160,t:'tgt',s:'₹160'}];
+  var h='<defs><pattern id="hatch" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line class="hatch-l" x1="0" y1="0" x2="0" y2="7"/></pattern></defs>';
+  [0,40,80,120,160].forEach(function(g){var y=baseY-g*k;h+='<line class="grid-l" x1="'+(x0-6)+'" x2="'+(W-8)+'" y1="'+y+'" y2="'+y+'"/><text x="'+(x0-12)+'" y="'+(y+4)+'" text-anchor="end">'+g+'</text>'});
+  bars.forEach(function(b){
+    var cx=x0+b.x*slot+slot/2;
+    if(b.t==='gap'){h+='<line class="gap-l" x1="'+cx+'" x2="'+cx+'" y1="'+(topY+20)+'" y2="'+baseY+'"/><text x="'+cx+'" y="'+(baseY+20)+'" text-anchor="middle">FY22–23</text>';return}
+    var bh=b.v*k,y=baseY-bh;
+    h+='<rect class="b-'+b.t+'" x="'+(cx-bw/2)+'" y="'+y+'" width="'+bw+'" height="'+bh+'" rx="2"/><text class="val" x="'+cx+'" y="'+(y-8)+'" text-anchor="middle">'+b.s+'</text><text x="'+cx+'" y="'+(baseY+20)+'" text-anchor="middle">'+b.l+'</text>';
+  });
+  h+='<line class="base" x1="'+(x0-6)+'" x2="'+(W-8)+'" y1="'+baseY+'" y2="'+baseY+'"/>';
+  $('revChart').innerHTML=h;
+
+  /* what-if */
+  function whatif(){
+    var base=parseFloat($('base').value)||0,g=+$('gr').value,ns=+$('ns').value,opd=+$('opd').value,aov=+$('aov').value;
+    $('grO').textContent=g+'%';$('nsO').textContent=ns;$('opdO').textContent=fmt(opd,1);$('aovO').textContent=fmt(aov,0);
+    var ex=base*(1+g/100),per=opd*365*aov/1e7,st=ns*0.5*per,tot=ex+st,gap=160-tot;
+    var exW=Math.min(ex/200*100,100);
+    $('wTotal').textContent='₹'+fmt(tot,1)+' Cr';
+    $('bEx').style.width=exW+'%';
+    $('bSt').style.left=exW+'%';
+    $('bSt').style.width=Math.max(Math.min(st/200*100,100-exW),0)+'%';
+    $('wGapK').textContent=gap>0?'Short of target by':'Above target by';
+    $('wGap').textContent='₹'+fmt(Math.abs(gap),1)+' Cr';
+    var need=(160-ex)/(0.5*per);
+    $('wNeed').textContent=need<=0?'None':(per>0?fmt(Math.ceil(need),0):'—');
+  }
+  ['base','gr','ns','opd','aov'].forEach(function(id){$(id).addEventListener('input',whatif)});whatif();
+
+  /* channel box */
+  var CH={
+    rtw:{t:'Ready-made, own site',p:'₹1,690–2,590',a:'3–5 days to metros',f:'Size exchange within 7 days, unworn',w:'The brand',n:'Carries the volume, and the stitching complaints.'},
+    mtm:{t:'Made-to-measure',p:'₹2,590–4,990+',a:'10–12 working days',f:'Two free alterations within 14 days. No refund.',w:'The brand',n:'Where the 93% first-time fit rate comes from.'},
+    mkt:{t:'Marketplaces and Blinkit',p:'₹1,500–2,990',a:'Under an hour to 3 days',f:'The platform’s rules. No alterations.',w:'The marketplace',n:'Widest reach, least control of the experience.'}
+  };
+  function ch(key){
+    var c=CH[key];
+    $('chbox').innerHTML='<span class="lab">'+c.t+'</span><span class="p">'+c.p+'</span><dl><dt>Arrives</dt><dd>'+c.a+'</dd><dt>If it doesn’t fit</dt><dd>'+c.f+'</dd><dt>Who fixes problems</dt><dd>'+c.w+'</dd></dl><p class="note">'+c.n+'</p>';
+    qa('[data-ch]').forEach(function(b){b.setAttribute('aria-pressed',String(b.getAttribute('data-ch')===key))});
+  }
+  qa('[data-ch]').forEach(function(b){b.addEventListener('click',function(){ch(b.getAttribute('data-ch'))})});ch('rtw');
+
+  /* what customers say */
+  var R=[
+    {n:'Fit',s:'good',l:'Holds',d:'Customers praise no thigh pulling and no gap at the back, and the stretch waistband.'},
+    {n:'Colour and shrinkage',s:'good',l:'Holds',d:'Both hold up in routine wear.'},
+    {n:'Stitching',s:'risk',l:'At risk',d:'Some users report seams opening and pocket stitching failing after 5 to 10 machine washes.'},
+    {n:'Look vs. price',s:'risk',l:'At risk',d:'Reddit buyers say delivered denim felt like budget clothing at ₹2,500 and up.'},
+    {n:'After purchase',s:'warn',l:'Friction',d:'Custom is final sale. Marketplace buyers report slow pickups and refunds.'}
+  ];
+  var filt='all',open=-1;
+  function rows(){
+    var h='';
+    R.forEach(function(r,i){
+      if(filt!=='all'&&r.s!==filt)return;
+      h+='<button type="button" class="rrow" data-r="'+i+'" aria-expanded="'+(open===i)+'"><b>'+r.n+'</b><span class="chipx c-'+r.s+'">'+r.l+'</span>'+(open===i?'<span class="s">'+r.d+'</span>':'')+'</button>';
+    });
+    $('rows').innerHTML=h;
+    qa('[data-r]').forEach(function(b){b.addEventListener('click',function(){var i=+b.getAttribute('data-r');open=open===i?-1:i;rows()})});
+  }
+  qa('[data-f]').forEach(function(b){b.addEventListener('click',function(){filt=b.getAttribute('data-f');open=-1;qa('[data-f]').forEach(function(x){x.setAttribute('aria-pressed',String(x===b))});rows()})});
+  rows();
+
+  /* price */
+  function price(){var p=+$('pp').value;$('ppO').textContent=fmt(p,0);$('pdot').style.left=(p/5000*100)+'%';$('ppD').textContent=fmt((1-p/3990)*100,0)+'% under'}
+  $('pp').addEventListener('input',price);price();
+
+  /* stores */
+  function store(){
+    var opd=+$('sopd').value,aov=+$('saov').value,gm=+$('sgm').value,cap=+$('scap').value;
+    $('sopdO').textContent=fmt(opd,1);$('saovO').textContent=fmt(aov,0);$('sgmO').textContent=fmt(gm,1);$('scapO').textContent=fmt(cap,0);
+    var rev=opd*365*aov/1e7,gp=rev*gm/100,mg=gp*100/12;
+    $('oRev').textContent='₹'+fmt(rev,2)+' Cr';$('oGp').textContent='₹'+fmt(gp,2)+' Cr';
+    [12,18,24].forEach(function(n){var c=mg-cap/n;$('oC'+n).textContent=c>0?'₹'+fmt(c,1)+' L':'Not possible'});
+    return {opd:opd,cap:cap};
+  }
+  function pace(){
+    var s=store(),t=+$('tgt').value,m=+$('mon').value,c=+$('cur').value;
+    $('tgtO').textContent=fmt(t,0);$('monO').textContent=fmt(m,0);$('curO').textContent=fmt(c,0);
+    var need=Math.max(t-c,0);
+    $('oPace').textContent=fmt(need/m,1);$('oYears').textContent=fmt(need/12,1)+' yrs';
+    $('oCap').textContent='₹'+fmt(need*s.cap/100,1)+' Cr';
+    $('oX').textContent=fmt(t*s.opd/(40.7e7/3500/365),1)+'×';
+    var added=Math.min(m,need),h='';
+    for(var i=0;i<t;i++)h+='<i class="'+(i<c?'on':(i<c+added?'mid':''))+'"></i>';
+    $('map').innerHTML=h;
+  }
+  ['sopd','saov','sgm','scap','tgt','mon','cur'].forEach(function(id){$(id).addEventListener('input',pace)});pace();
+
+  function so(){
+    var v=+$('so').value;$('soO').textContent=fmt(v,1);$('gfill').style.width=(v/14*100)+'%';
+    var b=$('vbox');
+    if(v>=8){b.className='verdictbox vb-go';b.textContent='Open an own store here'}
+    else if(v>=6){b.className='verdictbox vb-test';b.textContent='Close. Keep testing for a month'}
+    else{b.className='verdictbox vb-hold';b.textContent='Hold. Stay in the shop-in-shop'}
+  }
+  $('so').addEventListener('input',so);so();
+
+  /* moves */
+  var M=[
+    {t:'Put the safety net on ready-made, in stores',why:'The fit promise lives on custom orders. Stores already have tailors, so extending it costs little and lands where ₹6,000 orders happen.',first:'Offer one free hem or waist adjustment on ready-made bought in store.',test:'Return rate: store vs. online'},
+    {t:'Gate every style on a stitching test',why:'Fabric claims hold. Seams, pockets and hardware are where users report failure, mostly on marketplace denim.',first:'Wash 10 times, double the reported failure point. Pull marketplace denim until it passes.',test:'Stitching complaints per 1,000 orders'},
+    {t:'Choose the real price and show it',why:'Shoppers pay about 46% under the tag, so the tag has stopped meaning anything.',first:'One price and one coupon rule across site, blog and newsletter for eight weeks.',test:'Conversion and average order'},
+    {t:'Open stores at the pace the maths allows',why:'At one opening a month, 120 stores take over nine years. A weak store costs ₹30–40 lakh before it teaches anything.',first:'Test new cities in shop-in-shops first. Go or no-go at about 8 orders a day by month nine.',test:'Orders a day per store, by month'},
+    {t:'Tell the measurement story in public',why:'The measurement base is the asset rivals cannot copy quickly, yet the site leads with stretch and fabric.',first:'Confirm what the 500,000 figure counts, then print it in stores and ads.',test:'Size-exchange rate on ready-made'}
+  ];
+  var cur=0;
+  function moves(){
+    $('mvl').innerHTML=M.map(function(m,i){return '<button class="mvb" role="tab" type="button" data-m="'+i+'" aria-selected="'+(i===cur)+'"><span class="n">'+(i+1)+'</span>'+m.t+'</button>'}).join('');
+    var m=M[cur];
+    $('mvd').innerHTML='<h3>'+m.t+'</h3><div class="bx"><div><b>Why</b>'+m.why+'</div><div><b>First step</b>'+m.first+'</div><div class="t"><b>Test</b>'+m.test+'</div></div>';
+    qa('[data-m]').forEach(function(b){
+      b.addEventListener('click',function(){cur=+b.getAttribute('data-m');moves()});
+      b.addEventListener('keydown',function(e){
+        var n=null;
+        if(e.key==='ArrowDown')n=(cur+1)%M.length;
+        if(e.key==='ArrowUp')n=(cur-1+M.length)%M.length;
+        if(n!==null){e.preventDefault();cur=n;moves();var nb=document.querySelector('[data-m="'+n+'"]');if(nb)nb.focus()}
+      });
+    });
+  }
+  moves();
+
+  /* theme */
+  var th=$('theme');
+  function dark(){var d=document.documentElement.getAttribute('data-theme');return d?d==='dark':window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches}
+  function lab(){th.textContent=dark()?'Light':'Dark'}
+  th.addEventListener('click',function(){document.documentElement.setAttribute('data-theme',dark()?'light':'dark');lab()});lab();
+})();
+</script>
+
+</body></html>
